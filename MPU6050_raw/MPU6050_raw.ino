@@ -47,8 +47,9 @@ MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
+#define button 7
 #define LED_PIN 13
-bool blinkState = false;
+int button_action = 0;
 
 void setup() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
@@ -69,6 +70,7 @@ void setup() {
 
     // configure Arduino LED for
     pinMode(LED_PIN, OUTPUT);
+    pinMode(button,INPUT);
 }
 
 void loop() {
@@ -88,9 +90,13 @@ void loop() {
     Serial.print(gy); Serial.print(",");
     Serial.print(gz); Serial.print(" ");
 
-    // blink LED to indicate activity
-    blinkState = !blinkState;
-    digitalWrite(LED_PIN, blinkState);
-    delay(1000);
+    if(digitalRead(button) ==HIGH ){
+        digitalWrite(LED_PIN,HIGH);
+        Serial.print("a");
+        delay(10);
+        while(digitalRead(button) == HIGH){delay(1);}
+        digitalWrite(LED_PIN,LOW);
+    }
+    delay(100);
 
 }
